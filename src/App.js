@@ -6,13 +6,14 @@ export default class App extends Component {
   state = {
     turn: true,
     box: Array(9).fill(''),
-    vic: false,
+    winComb: [],
   };
 
   onClickHandler = id => {
-    const { turn, box, vic } = this.state;
+    const { turn, box, winComb } = this.state;
+
     const value = turn ? 'X' : 'O';
-    if (box[id] || vic) return;
+    if (box[id] || winComb.length !== 0) return;
     const newBox = [...box.slice(0, id), value, ...box.slice(id + 1)];
 
     this.setState({
@@ -41,27 +42,34 @@ export default class App extends Component {
       const k = toCheck[i];
 
       if (box[k[0]] === value && box[k[1]] === value && box[k[2]] === value) {
-        this.setState({ vic: true });
+        this.setState({ winComb: k });
       }
     }
   };
 
   render() {
     const field = [];
+    const { box, winComb } = this.state;
+
     for (let i = 0; i < 9; i++) {
+      let color = 'black';
+      if (winComb.includes(i)) {
+        color = 'red';
+      }
       field.push(
         <Square
           key={i}
           id={i}
           onClickHandler={this.onClickHandler}
-          value={this.state.box[i]}
+          value={box[i]}
+          color={color}
         />
       );
     }
     return (
       <div className={classes.App}>
         <div className={classes.AppField}>{field}</div>
-        {this.state.vic ? <p>Win!</p> : null}
+        {winComb.length !== 0 ? <p>Victory!</p> : null}
       </div>
     );
   }
