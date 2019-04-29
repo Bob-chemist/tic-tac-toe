@@ -47,6 +47,14 @@ export default class App extends Component {
     }
   };
 
+  restart = () => {
+    this.setState({
+      turn: true,
+      box: Array(9).fill(''),
+      winComb: [],
+    });
+  };
+
   render() {
     const field = [];
     const { box, winComb } = this.state;
@@ -66,10 +74,14 @@ export default class App extends Component {
         />
       );
     }
+
     return (
       <div className={classes.App}>
-        <div className={classes.AppField}>{field}</div>
         {winComb.length !== 0 ? <p>Victory!</p> : null}
+        <div className={classes.AppField}>{field}</div>
+        <button className={classes.Restart} onClick={this.restart}>
+          Restart
+        </button>
       </div>
     );
   }
